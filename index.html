@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LifeLine — Your Life. Your Memories. Your Story.</title>
+  <meta name="description" content="LifeLine is a personal life-story timeline and digital memory archive. Organize photos, descriptions, and milestones into an interactive chronological journey." />
+  <meta name="theme-color" content="#f8fafc" />
+
+  <!-- Open Graph Meta Tags -->
+  <meta property="og:title" content="LifeLine — Your Life. Your Memories. Your Story." />
+  <meta property="og:description" content="Chronological life timeline, multi-photo memory journal, and milestones archive with private cloud synchronization." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="assets/logo.jpg" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/jpeg" href="assets/logo.jpg" />
+
+  <!-- Core Stylesheet -->
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+  <!-- ========================================================================
+       GLOBAL REUSABLE HEADER
+       ======================================================================== -->
+  <header class="global-header" role="banner">
+    <div class="header-inner">
+      <!-- Brand Logo & Title -->
+      <a href="#" class="brand-block" data-nav-view="timeline" aria-label="LifeLine Home">
+        <img src="assets/logo.jpg" alt="LifeLine Emblem" class="brand-logo-img" />
+        <div class="brand-text-col">
+          <span class="brand-title">LifeLine</span>
+          <span class="brand-tagline-micro">Time & Memory Archive</span>
+        </div>
+      </a>
+
+      <!-- Primary Navigation Links -->
+      <nav class="header-nav-links" aria-label="Main Navigation">
+        <button class="nav-link-item active" data-nav-view="timeline" aria-current="page">Timeline</button>
+        <button class="nav-link-item" data-nav-view="grid">All Memories</button>
+        <button class="nav-link-item" data-nav-view="milestones">Milestones</button>
+        <button class="nav-link-item" data-nav-view="favorites">Favorites</button>
+        <button class="nav-link-item" data-nav-view="export">Data & Export</button>
+        <button class="nav-link-item" data-nav-view="about">About & Help</button>
+      </nav>
+
+      <!-- Global Memory Search with Suggestions -->
+      <div class="header-search-wrap">
+        <svg class="search-input-icon" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
+        </svg>
+        <input
+          type="search"
+          id="search-memories-input"
+          class="header-search-input"
+          placeholder="Search titles, places, #tags..."
+          aria-label="Search memories"
+          autocomplete="off"
+        />
+        <span class="search-kbd-hint" title="Press / to search">/</span>
+        <div id="search-suggestions-dropdown" class="search-dropdown hidden" role="listbox"></div>
+      </div>
+
+      <!-- Header Action Controls -->
+      <div class="header-actions">
+        <!-- Status Indicator Pill -->
+        <button id="supabase-status-badge" class="status-pill status-demo" aria-label="Supabase Status">
+          <span class="status-indicator"></span>
+          <span class="status-text">Demo Sandbox</span>
+        </button>
+
+        <!-- Theme Toggle Button -->
+        <button id="btn-theme-toggle" class="btn-icon-subtle" title="Toggle Light/Dark Theme" aria-label="Toggle Light/Dark Theme">
+          <span id="theme-toggle-icon">🌙</span>
+        </button>
+
+        <!-- Genuine Reminders Menu Button -->
+        <button id="btn-open-reminders" class="btn-icon-subtle" title="Memory Reminders" aria-label="Memory Reminders">
+          <svg viewBox="0 0 20 20" fill="currentColor">
+            <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z" />
+          </svg>
+        </button>
+
+        <!-- Database Settings Button -->
+        <button id="btn-open-settings" class="btn-icon-subtle" title="Database Settings" aria-label="Database Settings">
+          <svg viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd" />
+          </svg>
+        </button>
+
+        <!-- Prominent New Memory Button -->
+        <button id="btn-new-memory" class="btn-primary" aria-label="Add New Memory">
+          <svg style="width: 17px; height: 17px;" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
+          </svg>
+          <span>New Memory</span>
+        </button>
+
+        <!-- User Profile Pill -->
+        <div id="btn-user-profile" class="user-menu-pill" title="Current Account">
+          <div class="user-avatar">A</div>
+          <span class="user-name-label">Alex Morgan</span>
+        </div>
+
+        <!-- Mobile Menu Toggle -->
+        <button id="btn-mobile-menu-toggle" class="btn-mobile-toggle" aria-label="Toggle navigation menu">
+          <svg style="width: 22px; height: 22px;" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Navigation Drawer -->
+  <aside id="mobile-nav-drawer" class="mobile-drawer" aria-label="Mobile Navigation Drawer">
+    <div class="drawer-header">
+      <span class="brand-title">LifeLine</span>
+      <button id="btn-close-mobile-drawer" class="btn-icon-subtle" aria-label="Close menu">✕</button>
+    </div>
+    <nav class="drawer-links">
+      <button class="drawer-link" data-nav-view="timeline">Chronological Timeline</button>
+      <button class="drawer-link" data-nav-view="grid">All Memories (Photo Grid)</button>
+      <button class="drawer-link" data-nav-view="milestones">Milestone Explorer</button>
+      <button class="drawer-link" data-nav-view="favorites">Favorite Moments</button>
+      <button class="drawer-link" data-nav-view="export">Data & Life Story Export</button>
+      <button class="drawer-link" data-nav-view="about">About & Help</button>
+      <button class="drawer-link" data-nav-view="settings">Database Settings</button>
+    </nav>
+  </aside>
+
+  <!-- ========================================================================
+       DASHBOARD OVERVIEW & LIVE STATS
+       ======================================================================== -->
+  <section class="dashboard-overview-wrap" aria-label="Dashboard Overview">
+    <div class="dashboard-banner">
+      <div class="welcome-col">
+        <h1 id="welcome-heading">Your Life's Chronological Journey</h1>
+        <p class="welcome-subtitle">Your Life. Your Memories. Your Story. Preserve milestones, travels, and personal reflections across time.</p>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-item">
+          <span class="stat-value" id="stat-total-count">0</span>
+          <span class="stat-label">Memories</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-value" id="stat-years-spanned">0</span>
+          <span class="stat-label">Years Spanned</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-value" id="stat-milestones-count">0</span>
+          <span class="stat-label">Milestones</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- "On This Day" Retrospective Banner (Auto-populated if matches exist) -->
+  <section id="on-this-day-banner" class="on-this-day-card hidden" aria-label="On This Day in History"></section>
+
+  <!-- ========================================================================
+       VIEW 1: TIMELINE DASHBOARD (Primary Experience)
+       ======================================================================== -->
+  <div id="view-timeline-container">
+    <!-- Filter & Sort Toolbar -->
+    <div class="filter-toolbar">
+      <div class="category-filter-group" role="tablist" aria-label="Category Filters">
+        <button class="filter-pill active" data-category="All" role="tab" aria-selected="true">All Memories</button>
+        <button class="filter-pill" data-category="Milestones" role="tab" aria-selected="false">🏆 Milestones</button>
+        <button class="filter-pill" data-category="Travel" role="tab" aria-selected="false">✈️ Travel</button>
+        <button class="filter-pill" data-category="Career and Education" role="tab" aria-selected="false">💼 Career & Education</button>
+        <button class="filter-pill" data-category="Personal" role="tab" aria-selected="false">✨ Personal</button>
+        <button class="filter-pill" data-category="Family and Friends" role="tab" aria-selected="false">❤️ Family & Friends</button>
+        <button class="filter-pill" data-category="Achievements" role="tab" aria-selected="false">🎯 Achievements</button>
+        <button class="filter-pill" data-category="Everyday Life" role="tab" aria-selected="false">☕ Everyday Life</button>
+      </div>
+
+      <div class="toolbar-controls">
+        <button id="btn-toggle-sort" class="btn-secondary" title="Toggle Chronological Sorting">
+          <svg style="width: 15px; height: 15px;" viewBox="0 0 20 20" fill="currentColor">
+            <path d="M3 3a1 1 0 000 2h11a1 1 0 100-2H3zM3 7a1 1 0 000 2h7a1 1 0 100-2H3zM3 11a1 1 0 100 2h4a1 1 0 100-2H3zM15 8a1 1 0 10-2 0v5.586l-1.293-1.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L15 13.586V8z"/>
+          </svg>
+          <span>Newest First</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Main Feed: Year Scrubber + Timeline Line -->
+    <main class="main-layout">
+      <!-- Sticky Year Navigation Rail -->
+      <aside class="scrubber-sidebar" id="year-scrubber-nav" aria-label="Year Scrubber Rail"></aside>
+
+      <!-- Main Chronological Timeline Feed -->
+      <section class="timeline-feed" id="timeline-container" aria-label="Chronological Timeline Feed"></section>
+    </main>
+  </div>
+
+  <!-- ========================================================================
+       VIEW 2: ALL MEMORIES (Photo-Grid Alternative View)
+       ======================================================================== -->
+  <div id="view-grid-container" class="hidden" style="max-width: 1380px; margin: 0 auto; padding: 0 1.5rem 5rem;">
+    <div style="margin-bottom: 2rem;">
+      <h2 style="font-family: var(--font-heading); font-size: 1.5rem; margin-bottom: 0.35rem;">Photo Gallery View</h2>
+      <p style="color: var(--text-secondary); font-size: 0.92rem;">A visual showcase of every photograph captured in your LifeLine archive.</p>
+    </div>
+    <div id="grid-cards-container"></div>
+  </div>
+
+  <!-- ========================================================================
+       VIEW 3: MILESTONE EXPLORER
+       ======================================================================== -->
+  <div id="view-milestones-container" class="hidden" style="max-width: 1380px; margin: 0 auto; padding: 0 1.5rem 5rem;">
+    <div style="margin-bottom: 2rem;">
+      <h2 style="font-family: var(--font-heading); font-size: 1.5rem; margin-bottom: 0.35rem;">🏆 Milestone Explorer</h2>
+      <p style="color: var(--text-secondary); font-size: 0.92rem;">Key life milestones, career peaks, graduations, and transformative moments in chronological order.</p>
+    </div>
+    <div class="timeline-feed" id="milestones-timeline-container"></div>
+  </div>
+
+  <!-- ========================================================================
+       VIEW 4: FAVORITES
+       ======================================================================== -->
+  <div id="view-favorites-container" class="hidden" style="max-width: 1380px; margin: 0 auto; padding: 0 1.5rem 5rem;">
+    <div style="margin-bottom: 2rem;">
+      <h2 style="font-family: var(--font-heading); font-size: 1.5rem; margin-bottom: 0.35rem;">❤️ Favorite Moments</h2>
+      <p style="color: var(--text-secondary); font-size: 0.92rem;">Cherished memories marked with love across your journey.</p>
+    </div>
+    <div class="timeline-feed" id="favorites-feed-container"></div>
+  </div>
+
+  <!-- ========================================================================
+       VIEW 5: DATA PRIVACY & LIFE STORY EXPORT
+       ======================================================================== -->
+  <div id="view-export-container" class="hidden" style="max-width: 1000px; margin: 0 auto; padding: 0 1.5rem 6rem;">
+    <div style="margin-bottom: 2.5rem;">
+      <h2 style="font-family: var(--font-heading); font-size: 1.7rem; margin-bottom: 0.4rem;">Data Ownership & Export Center</h2>
+      <p style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.6;">Your memories belong exclusively to you. You can export your full metadata archive at any time or generate a printable Life-Story chronicle.</p>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 3rem;">
+      <!-- JSON Export Card -->
+      <div style="background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 1.75rem;">
+        <div style="font-size: 2rem; margin-bottom: 0.75rem;">📦</div>
+        <h3 style="font-family: var(--font-heading); font-size: 1.2rem; margin-bottom: 0.5rem; color: var(--text-primary);">Complete JSON Archive</h3>
+        <p style="color: var(--text-secondary); font-size: 0.88rem; line-height: 1.6; margin-bottom: 1.5rem;">
+          Download a structured JSON file containing all memory titles, dates, descriptions, tags, photo URLs, and milestone ratings.
+        </p>
+        <button id="btn-export-json" class="btn-primary" style="width: 100%;">Download JSON Archive</button>
+      </div>
+
+      <!-- Life-Story Markdown Export -->
+      <div style="background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 1.75rem;">
+        <div style="font-size: 2rem; margin-bottom: 0.75rem;">📖</div>
+        <h3 style="font-family: var(--font-heading); font-size: 1.2rem; margin-bottom: 0.5rem; color: var(--text-primary);">Life-Story Chronicle (.md)</h3>
+        <p style="color: var(--text-secondary); font-size: 0.88rem; line-height: 1.6; margin-bottom: 1.5rem;">
+          Generate a human-readable chronological Markdown chronicle organized by year with embedded photo links and stories.
+        </p>
+        <button id="btn-export-doc" class="btn-secondary" style="width: 100%;">Download Life-Story Document</button>
+      </div>
+    </div>
+
+    <!-- Privacy Architecture Card -->
+    <div style="background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 1.75rem;">
+      <h3 style="font-family: var(--font-heading); font-size: 1.15rem; color: var(--text-primary); margin-bottom: 0.75rem;">🔒 Privacy & Security Architecture</h3>
+      <ul style="color: var(--text-secondary); font-size: 0.9rem; line-height: 1.7; padding-left: 1.25rem;">
+        <li><strong>Zero Data Selling:</strong> LifeLine does not profile, monetize, or train AI models on your personal memories or photos.</li>
+        <li><strong>PostgreSQL Row Level Security (RLS):</strong> When connected to Supabase, database records are protected by cryptographic JWT tokens ensuring only you can read or edit your records.</li>
+        <li><strong>Private Cloud Storage:</strong> High-resolution photos are stored in dedicated cloud buckets with secure authenticated access.</li>
+        <li><strong>Client-Side Optimization:</strong> Images are compressed right in your browser via HTML5 Canvas before leaving your machine.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       VIEW 6: ABOUT & HELP
+       ======================================================================== -->
+  <div id="view-about-container" class="hidden" style="max-width: 1000px; margin: 0 auto; padding: 0 1.5rem 6rem;">
+    <div style="margin-bottom: 2.5rem;">
+      <h2 style="font-family: var(--font-heading); font-size: 1.7rem; margin-bottom: 0.4rem;">About LifeLine</h2>
+      <p style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.6;">Preserving life's fleeting moments into an enduring personal digital museum.</p>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 2rem;">
+      <div style="background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 1.75rem;">
+        <h3 style="font-family: var(--font-heading); font-size: 1.2rem; color: var(--text-primary); margin-bottom: 0.65rem;">Keyboard Shortcuts</h3>
+        <p style="color: var(--text-secondary); font-size: 0.88rem; margin-bottom: 1.25rem;">Navigate quickly throughout your timeline using standard keystrokes:</p>
+        <div style="display: grid; grid-template-columns: 120px 1fr; gap: 0.75rem; font-size: 0.88rem;">
+          <code style="font-family: var(--font-mono); color: var(--accent-cyan); background: var(--accent-cyan-subtle); padding: 2px 6px; border-radius: 4px;">/</code>
+          <span style="color: var(--text-secondary);">Focus the Global Search bar instantly</span>
+          <code style="font-family: var(--font-mono); color: var(--accent-cyan); background: var(--accent-cyan-subtle); padding: 2px 6px; border-radius: 4px;">N</code>
+          <span style="color: var(--text-secondary);">Open "Capture New Memory" dialog</span>
+          <code style="font-family: var(--font-mono); color: var(--accent-cyan); background: var(--accent-cyan-subtle); padding: 2px 6px; border-radius: 4px;">Esc</code>
+          <span style="color: var(--text-secondary);">Close any active modal or lightbox</span>
+          <code style="font-family: var(--font-mono); color: var(--accent-cyan); background: var(--accent-cyan-subtle); padding: 2px 6px; border-radius: 4px;">← / →</code>
+          <span style="color: var(--text-secondary);">Navigate previous/next photos in memory carousel</span>
+        </div>
+      </div>
+
+      <div style="background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 1.75rem;">
+        <h3 style="font-family: var(--font-heading); font-size: 1.2rem; color: var(--text-primary); margin-bottom: 0.65rem;">Frequently Asked Questions</h3>
+        <div style="display: flex; flex-direction: column; gap: 1rem; color: var(--text-secondary); font-size: 0.9rem; line-height: 1.6;">
+          <div>
+            <strong style="color: var(--text-primary);">How does Demo Sandbox mode work?</strong>
+            <p>If you haven't connected a Supabase database yet, LifeLine stores your memories locally in your browser's persistent storage. You can test photo compression, year scrubbing, and editing without any cloud setup.</p>
+          </div>
+          <div>
+            <strong style="color: var(--text-primary);">Can I upload multiple photos per memory?</strong>
+            <p>Yes! Drag and drop or select multiple files simultaneously. Each image is compressed to WebP/JPEG with high efficiency, and you can browse them via the carousel in detail view.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       MODAL 1: ADD / EDIT MEMORY (With Multi-Photo Support)
+       ======================================================================== -->
+  <div class="modal" id="memory-modal" role="dialog" aria-modal="true" aria-labelledby="memory-modal-title">
+    <div class="modal-backdrop"></div>
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h2 class="modal-title" id="memory-modal-title">Capture New Memory</h2>
+        <button class="modal-close-btn" data-action="close-modal" aria-label="Close dialog">✕</button>
+      </div>
+
+      <form id="memory-form">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label" for="input-memory-title">Memory Title *</label>
+            <input type="text" id="input-memory-title" required placeholder="e.g. Watched the northern lights in Tromsø" />
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="input-memory-date">Date of Memory *</label>
+              <input type="date" id="input-memory-date" required />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="input-memory-category">Category</label>
+              <select id="input-memory-category">
+                <option value="Personal">✨ Personal</option>
+                <option value="Milestones">🏆 Milestones</option>
+                <option value="Travel">✈️ Travel</option>
+                <option value="Career and Education">💼 Career and Education</option>
+                <option value="Family and Friends">❤️ Family and Friends</option>
+                <option value="Achievements">🎯 Achievements</option>
+                <option value="Everyday Life">☕ Everyday Life</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="input-memory-location">Location</label>
+              <input type="text" id="input-memory-location" placeholder="e.g. Mount Rainier, WA or Home" />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="input-memory-importance">Significance (Stars)</label>
+              <select id="input-memory-importance">
+                <option value="5">★★★★★ Life-Altering Event</option>
+                <option value="4">★★★★☆ Highly Significant</option>
+                <option value="3" selected>★★★☆☆ Memorable Moment</option>
+                <option value="2">★★☆☆☆ Everyday Note</option>
+                <option value="1">★☆☆☆☆ Small Observation</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Multi-photo Upload Zone -->
+          <div class="form-group">
+            <label class="form-label">Attach Photos (Supports Multiple Files)</label>
+            <div class="dropzone-container" id="image-dropzone">
+              <div style="font-size: 1.8rem; margin-bottom: 0.35rem;">📷</div>
+              <div style="font-size: 0.88rem; font-weight: 500; color: #fff;">Click or drag & drop one or multiple photos</div>
+              <div style="font-size: 0.74rem; color: var(--text-muted); margin-top: 0.2rem;">Compressed and optimized client-side before upload</div>
+              <input type="file" id="memory-images-input" accept="image/*" multiple class="hidden" />
+            </div>
+
+            <!-- Multi-Image Preview Grid -->
+            <div id="multi-image-previews" class="multi-previews-grid"></div>
+            <div id="compression-stats-summary" style="margin-top: 0.5rem;"></div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="input-memory-description">Story & Personal Reflections</label>
+            <textarea id="input-memory-description" rows="3" placeholder="What happened? How did it feel? Who was with you?"></textarea>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="input-memory-tags">Tags (comma-separated)</label>
+              <input type="text" id="input-memory-tags" placeholder="hiking, summit, friends, code" />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="input-memory-privacy">Privacy</label>
+              <select id="input-memory-privacy">
+                <option value="private">🔒 Private (Only Me)</option>
+                <option value="shared">🌐 Sharable via Link</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Milestone & Favorite Toggles -->
+          <div class="form-checkbox-row">
+            <label class="checkbox-label">
+              <input type="checkbox" id="input-memory-milestone" />
+              <span>🏆 Mark as Milestone</span>
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" id="input-memory-favorite" />
+              <span>❤️ Add to Favorites</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn-secondary" data-action="close-modal">Cancel</button>
+          <button type="submit" id="btn-submit-memory" class="btn-primary">Save Memory</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       MODAL 2: MEMORY DETAIL & MULTI-PHOTO CAROUSEL
+       ======================================================================== -->
+  <div class="modal" id="detail-modal" role="dialog" aria-modal="true" aria-labelledby="detail-title">
+    <div class="modal-backdrop"></div>
+    <div class="modal-dialog modal-dialog-large">
+      <div class="modal-header">
+        <div style="display: flex; align-items: center; gap: 0.75rem;">
+          <div id="detail-category-badge"></div>
+          <span id="detail-date" style="font-family: var(--font-mono); font-size: 0.82rem; color: var(--text-muted);"></span>
+        </div>
+        <button class="modal-close-btn" data-action="close-modal" aria-label="Close dialog">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <!-- Multi-Photo Carousel Container -->
+        <div id="detail-carousel-container" class="hidden"></div>
+
+        <h2 id="detail-title" style="font-family: var(--font-heading); font-size: 1.5rem; margin-bottom: 0.4rem; color: var(--text-primary);"></h2>
+        <div id="detail-location" style="color: var(--accent-cyan); font-size: 0.88rem; margin-bottom: 0.85rem;" class="hidden"></div>
+        <p id="detail-desc" style="color: var(--text-secondary); font-size: 0.98rem; line-height: 1.65; white-space: pre-wrap; margin-bottom: 1.25rem;"></p>
+        <div id="detail-tags" class="memory-tags hidden"></div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" id="btn-detail-fav" class="btn-secondary">🤍 Favorite</button>
+        <button type="button" id="btn-detail-edit" class="btn-secondary">Edit</button>
+        <button type="button" id="btn-detail-delete" class="btn-secondary" style="color: var(--accent-rose);">Delete</button>
+        <button type="button" class="btn-primary" data-action="close-modal">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       MODAL 3: GENUINE USER REMINDERS CONFIG
+       ======================================================================== -->
+  <div class="modal" id="reminders-modal" role="dialog" aria-modal="true" aria-labelledby="reminders-title">
+    <div class="modal-backdrop"></div>
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h2 class="modal-title" id="reminders-title">Memory Reminders & Reflections</h2>
+        <button class="modal-close-btn" data-action="close-modal" aria-label="Close dialog">✕</button>
+      </div>
+
+      <form id="reminders-config-form">
+        <div class="modal-body">
+          <p style="color: var(--text-secondary); font-size: 0.9rem; line-height: 1.6; margin-bottom: 1.5rem;">
+            Configure genuine reflections and milestone reminders. LifeLine only sends reminders that you explicitly enable.
+          </p>
+
+          <div style="display: flex; flex-direction: column; gap: 1.25rem;">
+            <label class="checkbox-label">
+              <input type="checkbox" id="remind-milestones" checked />
+              <div>
+                <strong style="color: #fff; display: block;">Annual Milestone Anniversaries</strong>
+                <span style="font-size: 0.78rem; color: var(--text-muted);">Receive celebration notes on the anniversary of major life milestones.</span>
+              </div>
+            </label>
+
+            <label class="checkbox-label">
+              <input type="checkbox" id="remind-onthisday" checked />
+              <div>
+                <strong style="color: #fff; display: block;">On This Day Retrospective</strong>
+                <span style="font-size: 0.78rem; color: var(--text-muted);">Surface memories that happened on today's calendar date in previous years.</span>
+              </div>
+            </label>
+
+            <label class="checkbox-label">
+              <input type="checkbox" id="remind-weekly" />
+              <div>
+                <strong style="color: #fff; display: block;">Sunday Reflection Prompt</strong>
+                <span style="font-size: 0.78rem; color: var(--text-muted);">A gentle weekend reminder to record noteworthy moments from the past week.</span>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn-secondary" data-action="close-modal">Cancel</button>
+          <button type="submit" class="btn-primary">Save Preferences</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       MODAL 4: SUPABASE SETTINGS & SQL MIGRATION
+       ======================================================================== -->
+  <div class="modal" id="supabase-modal" role="dialog" aria-modal="true" aria-labelledby="settings-modal-title">
+    <div class="modal-backdrop"></div>
+    <div class="modal-dialog modal-dialog-large">
+      <div class="modal-header">
+        <h2 class="modal-title" id="settings-modal-title">Supabase Database & Cloud Storage</h2>
+        <button class="modal-close-btn" data-action="close-modal" aria-label="Close dialog">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <p style="color: var(--text-secondary); font-size: 0.9rem; line-height: 1.6; margin-bottom: 1.25rem;">
+          Connect your live Supabase project to synchronize your life memories, authenticated accounts, and uploaded photos in the cloud. Or keep testing in Demo Sandbox mode.
+        </p>
+
+        <form id="supabase-config-form">
+          <div class="form-group">
+            <label class="form-label" for="input-supabase-url">Supabase Project URL</label>
+            <input type="url" id="input-supabase-url" placeholder="https://your-project-id.supabase.co" />
+            <div class="form-hint">Found in Supabase Dashboard → Settings → API</div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="input-supabase-key">Supabase Anon Key</label>
+            <input type="password" id="input-supabase-key" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." />
+            <div class="form-hint">Found in Supabase Dashboard → Settings → API (Project API Keys: anon/public)</div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="input-supabase-bucket">Storage Bucket Name</label>
+            <input type="text" id="input-supabase-bucket" value="lifeline-media" />
+            <div class="form-hint">Storage bucket name configured in your Supabase project (default: lifeline-media)</div>
+          </div>
+
+          <div style="display: flex; gap: 0.65rem; margin-top: 1rem; flex-wrap: wrap;">
+            <button type="submit" class="btn-primary">Connect & Sync</button>
+            <button type="button" id="btn-disconnect-supabase" class="btn-secondary">Use Demo Mode</button>
+            <button type="button" id="btn-reset-demo-data" class="btn-secondary" title="Reset sample memories">Reset Demo Data</button>
+            <button type="button" id="btn-clear-demo-data" class="btn-secondary" style="color: var(--accent-rose);" title="Start completely empty">Clear Demo Data</button>
+          </div>
+        </form>
+
+        <hr style="border: 0; border-top: 1px solid var(--border-subtle); margin: 1.75rem 0 1.25rem;" />
+
+        <div style="display: flex; align-items: center; justify-content: space-between;">
+          <h3 style="font-family: var(--font-heading); font-size: 1.05rem; color: var(--text-primary);">Supabase SQL Schema Migration</h3>
+          <button type="button" id="btn-copy-sql" class="btn-secondary" style="font-size: 0.78rem; padding: 0.3rem 0.7rem;">Copy SQL</button>
+        </div>
+        <p style="color: var(--text-muted); font-size: 0.8rem; margin-top: 0.2rem;">Run this script once in your Supabase SQL Editor:</p>
+
+        <pre class="sql-codebox" id="supabase-sql-code">-- 1. Create memories table with multi-photo support
+CREATE TABLE IF NOT EXISTS public.memories (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
+  title TEXT NOT NULL,
+  description TEXT,
+  date DATE NOT NULL,
+  category TEXT DEFAULT 'Personal',
+  location TEXT,
+  importance INT DEFAULT 3 CHECK (importance BETWEEN 1 AND 5),
+  is_milestone BOOLEAN DEFAULT false,
+  is_favorite BOOLEAN DEFAULT false,
+  privacy TEXT DEFAULT 'private',
+  media_url TEXT,
+  media_path TEXT,
+  photos JSONB DEFAULT '[]'::jsonb,
+  tags TEXT[] DEFAULT ARRAY[]::TEXT[],
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- 2. Performance indexes
+CREATE INDEX IF NOT EXISTS idx_memories_user_date ON public.memories (user_id, date DESC);
+CREATE INDEX IF NOT EXISTS idx_memories_category ON public.memories (user_id, category);
+CREATE INDEX IF NOT EXISTS idx_memories_milestones ON public.memories (user_id, is_milestone);
+CREATE INDEX IF NOT EXISTS idx_memories_favorites ON public.memories (user_id, is_favorite);
+
+-- 3. Row Level Security (RLS)
+ALTER TABLE public.memories ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Users can manage their own memories"
+  ON public.memories
+  FOR ALL
+  USING (auth.uid() = user_id)
+  WITH CHECK (auth.uid() = user_id);
+
+-- 4. Storage bucket setup
+INSERT INTO storage.buckets (id, name, public)
+VALUES ('lifeline-media', 'lifeline-media', false)
+ON CONFLICT (id) DO NOTHING;
+
+CREATE POLICY "Users upload their own memory media"
+  ON storage.objects FOR INSERT
+  WITH CHECK (bucket_id = 'lifeline-media' AND auth.uid()::text = (storage.foldername(name))[1]);
+
+CREATE POLICY "Users view their own memory media"
+  ON storage.objects FOR SELECT
+  USING (bucket_id = 'lifeline-media' AND auth.uid()::text = (storage.foldername(name))[1]);</pre>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn-primary" data-action="close-modal">Done</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container" role="status" aria-live="polite"></div>
+
+  <!-- ========================================================================
+       GLOBAL REUSABLE FOOTER
+       ======================================================================== -->
+  <footer class="global-footer" role="contentinfo">
+    <div class="footer-inner">
+      <div class="footer-top-grid">
+        <!-- Col 1: Brand & Description -->
+        <div class="footer-brand-col">
+          <div style="display: flex; align-items: center; gap: 0.65rem;">
+            <img src="assets/logo.jpg" alt="" style="width: 28px; height: 28px; border-radius: 6px;" />
+            <span style="font-family: var(--font-heading); font-size: 1.25rem; font-weight: 800; color: var(--text-primary);">LifeLine</span>
+          </div>
+          <p class="footer-tagline">"Your Life. Your Memories. Your Story." An enduring, private life timeline archive designed to celebrate the moments that define who you are.</p>
+        </div>
+
+        <!-- Col 2: Navigation -->
+        <div>
+          <h4 class="footer-col-title">Archive</h4>
+          <ul class="footer-link-list">
+            <li><button data-nav-view="timeline">Chronological Timeline</button></li>
+            <li><button data-nav-view="grid">Photo Gallery</button></li>
+            <li><button data-nav-view="milestones">Milestone Explorer</button></li>
+            <li><button data-nav-view="favorites">Favorite Moments</button></li>
+          </ul>
+        </div>
+
+        <!-- Col 3: Data & Export -->
+        <div>
+          <h4 class="footer-col-title">Data & Privacy</h4>
+          <ul class="footer-link-list">
+            <li><button data-nav-view="export">Export Life Story</button></li>
+            <li><button data-nav-view="export">JSON Data Backup</button></li>
+            <li><button data-nav-view="settings">Database Settings</button></li>
+            <li><button data-nav-view="about">Privacy Guidelines</button></li>
+          </ul>
+        </div>
+
+        <!-- Col 4: Resources & Help -->
+        <div>
+          <h4 class="footer-col-title">Resources</h4>
+          <ul class="footer-link-list">
+            <li><button data-nav-view="about">Keyboard Shortcuts</button></li>
+            <li><button data-nav-view="about">Help & FAQ</button></li>
+            <li><button id="footer-btn-reminders">Reminder Settings</button></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom-row">
+        <span>&copy; 2026 LifeLine. All rights reserved.</span>
+        <span class="data-ownership-notice">
+          <span>🔒</span>
+          <span>Your memories are private and belong solely to you.</span>
+        </span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Application Entry Point -->
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
